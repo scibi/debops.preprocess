@@ -15,5 +15,13 @@
 %}
 # aaa: "{{preprocess_tpl_search_path}}"
 # bbb: "{{preprocess_tpl_template_location}}"
-{{pv.var_name}}: {{ lookup("template", preprocess_tpl_template_location) | from_yaml }}
+{%   set preprocess_tpl_var_value = lookup("template", preprocess_tpl_template_location) | from_yaml %}
+{%   if preprocess_tpl_var_value is string %}
+# string
+{{pv.var_name}}: '{{ preprocess_tpl_var_value }}'
+{%   else %}
+# not a string
+{{pv.var_name}}:
+  {{ preprocess_tpl_var_value | to_nice_yaml(explicit_start=False, explicit_end=False) | indent(2, False)}}
+{%   endif %}
 {% endfor %}

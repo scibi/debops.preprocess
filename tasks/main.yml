@@ -1,6 +1,12 @@
 ---
 # tasks file for debops.preprocess
 #
+
+#- name: Debug template
+#  template:
+#    src: '{{ role_path }}/files/preprocess.j2'
+#    dest: '/tmp/tmp_preprocess.yml'
+
 - name: Preprocess variables
   set_fact:
     preprocess_results: '{{ lookup("template", "preprocess.j2") | from_yaml }}'
