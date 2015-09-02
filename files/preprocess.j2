@@ -1,0 +1,19 @@
+---
+{% for pv in preprocess_vars %}
+{%   set preprocess_tpl_search_path = [] %}
+{%   set _ = preprocess_tpl_search_path.append(inventory_dir+'/../templates/preprocess') %}
+{%   if pv.template_path is defined and pv.template_path %}
+{%     set _ = preprocess_tpl_search_path.append(pv.template_path) %}
+{%   endif %}
+{%   if pv.role_name is defined and pv.role_name %}
+{%     set _ = preprocess_tpl_search_path.append(role_path+'/../'+pv.role_name+'/templates/preprocess') %}
+{%   endif %}
+{%   set _ = preprocess_tpl_search_path.append(role_path+'/templates/preprocess') %}
+{%   set preprocess_tpl_template_location = lookup('first_found', [ {
+         'files': pv.template_name|d(pv.var_name)+'.j2',
+         'paths': preprocess_tpl_search_path }])
+%}
+# aaa: "{{preprocess_tpl_search_path}}"
+# bbb: "{{preprocess_tpl_template_location}}"
+{{pv.var_name}}: {{ lookup("template", preprocess_tpl_template_location) | from_yaml }}
+{% endfor %}

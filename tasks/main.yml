@@ -1,0 +1,7 @@
+---
+# tasks file for debops.preprocess
+#
+- name: Preprocess variables
+  set_fact:
+    preprocess_results: '{{ lookup("template", "preprocess.j2") | from_yaml }}'
+
